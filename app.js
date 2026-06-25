@@ -1,5 +1,5 @@
 // =====================================================================
-// Havain Support — app.js
+// Havain Support â€” app.js
 //
 // Real-time global counter backed by Firebase Firestore.
 // If no Firebase project is configured yet, the page automatically
@@ -19,6 +19,9 @@ import {
 
 // ---------------------------------------------------------------------
 // 1. CONFIGURE YOUR FIREBASE PROJECT HERE
+//    Replace every value below with the config object Firebase gives you
+//    when you create a Web App (Firebase Console â†’ Project settings â†’
+//    Your apps â†’ Web). Full step-by-step instructions are in README.md.
 // ---------------------------------------------------------------------
 const firebaseConfig = {
   apiKey: "AIzaSyCj83oscbLH1tUHWbkhl7HonrQ9P9vN-nA",
@@ -149,7 +152,7 @@ if (!DEMO_MODE) {
   const globalRef = doc(db, "stats", "global");
   const dailyRef = doc(db, "dailyStats", todayKey());
 
-  setStatus("Connecting…", "busy");
+  setStatus("Connectingâ€¦", "busy");
 
   onSnapshot(
     globalRef,
@@ -160,7 +163,7 @@ if (!DEMO_MODE) {
     },
     (err) => {
       console.error("Global counter listener error:", err);
-      setStatus("Connection issue: " + (err.code || err.message), "err");
+      setStatus("Connection issue â€” retrying", "err");
     }
   );
 
@@ -175,16 +178,18 @@ if (!DEMO_MODE) {
 
   incrementSupport = async function () {
     await runTransaction(db, async (tx) => {
+      // All reads MUST happen before any writes in a Firestore transaction.
       const globalSnap = await tx.get(globalRef);
+      const dailySnap = await tx.get(dailyRef);
+
       const currentTotal = globalSnap.exists() ? globalSnap.data().totalLikes || 0 : 0;
+      const currentDaily = dailySnap.exists() ? dailySnap.data().count || 0 : 0;
+
       tx.set(
         globalRef,
         { totalLikes: currentTotal + 1, updatedAt: serverTimestamp() },
         { merge: true }
       );
-
-      const dailySnap = await tx.get(dailyRef);
-      const currentDaily = dailySnap.exists() ? dailySnap.data().count || 0 : 0;
       tx.set(
         dailyRef,
         { count: currentDaily + 1, date: todayKey(), updatedAt: serverTimestamp() },
@@ -193,12 +198,15 @@ if (!DEMO_MODE) {
     });
   };
 } else {
+  // -------------------------------------------------------------------
+  // Backend: Demo mode (localStorage only â€” per browser, not global)
+  // -------------------------------------------------------------------
   console.warn(
     "[Havain Support] Running in DEMO MODE: counts are stored only in this browser " +
       "(localStorage), not in a shared online database. Configure Firebase in app.js " +
       "and see README.md to make the counter truly global."
   );
-  setStatus("Demo mode — see README to connect a database", "err");
+  setStatus("Demo mode â€” see README to connect a database", "err");
 
   function readLocal(key) {
     return Number(localStorage.getItem(key) || 0);
@@ -238,7 +246,7 @@ function startHold(e) {
     holding = false;
     dial.classList.remove("charging");
     dial.classList.add("complete");
-    setStatus("Saving your support…", "busy");
+    setStatus("Saving your supportâ€¦", "busy");
     try {
       await incrementSupport();
       setStatus(DEMO_MODE ? "Saved locally (demo mode)" : "Saved", "ok");
@@ -246,8 +254,7 @@ function startHold(e) {
       if (navigator.vibrate) navigator.vibrate(12);
     } catch (err) {
       console.error("Failed to record support:", err);
-      const detail = (err && (err.code || err.message)) || "unknown error";
-      setStatus("Error: " + detail, "err");
+      setStatus("Error: " + (err && err.message ? err.message : String(err)), "err");
     }
     setTimeout(() => dial.classList.remove("complete"), 650);
   }, HOLD_DURATION);
@@ -266,6 +273,7 @@ dial.addEventListener("pointerleave", cancelHold);
 dial.addEventListener("pointercancel", cancelHold);
 dial.addEventListener("contextmenu", (e) => e.preventDefault());
 
+// keyboard accessibility: hold Space/Enter for 3 seconds too
 dial.addEventListener("keydown", (e) => {
   if ((e.code === "Space" || e.code === "Enter") && !e.repeat) {
     startHold(e);
