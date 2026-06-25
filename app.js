@@ -19,9 +19,6 @@ import {
 
 // ---------------------------------------------------------------------
 // 1. CONFIGURE YOUR FIREBASE PROJECT HERE
-//    Replace every value below with the config object Firebase gives you
-//    when you create a Web App (Firebase Console → Project settings →
-//    Your apps → Web). Full step-by-step instructions are in README.md.
 // ---------------------------------------------------------------------
 const firebaseConfig = {
   apiKey: "AIzaSyCj83oscbLH1tUHWbkhl7HonrQ9P9vN-nA",
@@ -163,7 +160,7 @@ if (!DEMO_MODE) {
     },
     (err) => {
       console.error("Global counter listener error:", err);
-      setStatus("Connection issue — retrying", "err");
+      setStatus("Connection issue: " + (err.code || err.message), "err");
     }
   );
 
@@ -196,9 +193,6 @@ if (!DEMO_MODE) {
     });
   };
 } else {
-  // -------------------------------------------------------------------
-  // Backend: Demo mode (localStorage only — per browser, not global)
-  // -------------------------------------------------------------------
   console.warn(
     "[Havain Support] Running in DEMO MODE: counts are stored only in this browser " +
       "(localStorage), not in a shared online database. Configure Firebase in app.js " +
@@ -252,7 +246,8 @@ function startHold(e) {
       if (navigator.vibrate) navigator.vibrate(12);
     } catch (err) {
       console.error("Failed to record support:", err);
-      setStatus("Couldn't save — please try again", "err");
+      const detail = (err && (err.code || err.message)) || "unknown error";
+      setStatus("Error: " + detail, "err");
     }
     setTimeout(() => dial.classList.remove("complete"), 650);
   }, HOLD_DURATION);
@@ -271,7 +266,6 @@ dial.addEventListener("pointerleave", cancelHold);
 dial.addEventListener("pointercancel", cancelHold);
 dial.addEventListener("contextmenu", (e) => e.preventDefault());
 
-// keyboard accessibility: hold Space/Enter for 3 seconds too
 dial.addEventListener("keydown", (e) => {
   if ((e.code === "Space" || e.code === "Enter") && !e.repeat) {
     startHold(e);
