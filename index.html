@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Havain Support</title>
+<meta name="description" content="The official public support platform for the Havain project. Hold the button for three seconds to add your support." />
+
+<!-- Fonts: Fraunces (display) + Inter (body/UI) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Ambient background -->
+  <div class="bg-aurora" aria-hidden="true"></div>
+
+  <!-- Theme toggle -->
+  <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch between light and dark mode" title="Toggle theme">
+    <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/></svg>
+    <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></svg>
+  </button>
+
+  <main class="page">
+
+    <!-- Header -->
+    <header class="masthead">
+      <span class="masthead-mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none"><path d="M24 4 L42 14 V34 L24 44 L6 34 V14 Z" stroke="currentColor" stroke-width="1.4"/><path d="M24 4 V44 M6 14 L42 34 M42 14 L6 34" stroke="currentColor" stroke-width="0.8" opacity="0.55"/></svg>
+      </span>
+      <p class="masthead-eyebrow">Havain Project &mdash; Public Support Platform</p>
+    </header>
+
+    <!-- Core layout: action card (left) + supporting copy (right) -->
+    <section class="layout">
+
+      <!-- Action Card -->
+      <div class="card" role="region" aria-label="Support Havain">
+        <h1 class="title">Havain Support</h1>
+        <p class="subtitle">Hold the gem below for three seconds to add your support.</p>
+
+        <div class="dial-wrap">
+          <button
+            id="supportBtn"
+            class="dial"
+            type="button"
+            aria-label="Press and hold for three seconds to support Havain"
+            aria-describedby="counterLabel"
+          >
+            <svg class="dial-ring" viewBox="0 0 220 220" aria-hidden="true">
+              <circle class="dial-ring-track" cx="110" cy="110" r="100"></circle>
+              <circle class="dial-ring-fill" cx="110" cy="110" r="100"></circle>
+            </svg>
+            <span class="dial-core">
+              <svg class="dial-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 21s-7.5-4.6-10-9.2C0.2 8.2 2 4.7 5.6 4.1c2.2-.4 4.2.7 6.4 3 2.2-2.3 4.2-3.4 6.4-3 3.6.6 5.4 4.1 3.6 7.7C19.5 16.4 12 21 12 21Z"/>
+              </svg>
+              <span class="dial-text">Hold to<br/>Support</span>
+            </span>
+          </button>
+          <div class="dial-pulse" aria-hidden="true"></div>
+        </div>
+
+        <div class="counter-block">
+          <p class="counter-eyebrow" id="counterLabel">Total Support</p>
+          <p class="counter" id="counterValue" aria-live="polite">&mdash;</p>
+          <p class="counter-sub" id="dailyStat">Today: <span id="dailyValue">&mdash;</span></p>
+        </div>
+
+        <p class="toast" id="thankYouToast" role="status">Thank you for supporting Havain.</p>
+      </div>
+
+      <!-- Supporting copy -->
+      <aside class="side">
+        <p class="side-quote">&ldquo;Every support helps the Havain project continue to grow.&rdquo;</p>
+        <div class="side-divider" aria-hidden="true"></div>
+        <p class="side-text">
+          This page is the official public support platform for the <strong>Havain project</strong>.
+          It exists for one purpose: to let anyone, anywhere, show their support with a single deliberate
+          gesture. There are no accounts, no forms, and no friction &mdash; just a quiet act of encouragement
+          that joins a running, permanent total kept for the whole community.
+        </p>
+        <p class="side-text">
+          Hold the gem for three full seconds and your support is added instantly, in real time, for every
+          visitor to see.
+        </p>
+        <ul class="side-meta">
+          <li><span class="dot live"></span> Live, synced across all visitors</li>
+          <li><span class="dot"></span> Unlimited supports per visitor</li>
+          <li><span class="dot"></span> Stored permanently in the cloud</li>
+        </ul>
+      </aside>
+
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="footer-credits">
+        <span>Development &mdash; Sodla</span>
+        <span class="sep">&middot;</span>
+        <span>Engineer &mdash; Caseq</span>
+        <span class="sep">&middot;</span>
+        <span>Investor &mdash; Restopolia</span>
+        <span class="sep">&middot;</span>
+        <span>Approved by &mdash; Gavin</span>
+      </div>
+      <div class="footer-meta">
+        <span>Made by Havain Team Creations</span>
+        <span class="sep">&middot;</span>
+        <span id="versionTag">v1.0.0</span>
+        <span class="sep">&middot;</span>
+        <span>&copy; <span id="year"></span> Havain</span>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- Connection / loading indicator -->
+  <div class="status-pill" id="statusPill">
+    <span class="status-dot" id="statusDot"></span>
+    <span id="statusText">Connecting&hellip;</span>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+rules_version = '2';
+
+// =====================================================================
+// Havain Support — Firestore Security Rules
+//
+// Goal: let any visitor increase the support counters in small, safe
+// steps, while making it impossible (via these rules) for a client to
+// delete data, overwrite history, or push the count down.
+//
+// Paste this into Firebase Console → Firestore Database → Rules.
+// =====================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global running total: stats/global { totalLikes, updatedAt }
+    match /stats/global {
+      allow read: if true;
+
+      // Allow create only once, starting at 0 or 1.
+      allow create: if request.resource.data.totalLikes is int
+                    && request.resource.data.totalLikes >= 0
+                    && request.resource.data.totalLikes <= 1;
+
+      // Allow update only if the new value is the old value plus
+      // exactly 1 (one support per write) — never a decrease, never a jump.
+      allow update: if request.resource.data.totalLikes is int
+                    && request.resource.data.totalLikes == resource.data.totalLikes + 1;
+
+      allow delete: if false;
+    }
+
+    // Per-day stats: dailyStats/{YYYY-MM-DD} { count, date, updatedAt }
+    match /dailyStats/{day} {
+      allow read: if true;
+
+      allow create: if request.resource.data.count is int
+                    && request.resource.data.count >= 0
+                    && request.resource.data.count <= 1;
+
+      allow update: if request.resource.data.count is int
+                    && request.resource.data.count == resource.data.count + 1;
+
+      allow delete: if false;
+    }
+
+    // Deny everything else by default.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
